@@ -37,7 +37,7 @@
       </template>
     </VNavigationDrawer>
 
-    <VMain class="bg-melon-200">
+    <VMain class="bg-burnt_sienna-200">
       <VContainer>
         <NuxtPage />
       </VContainer>
