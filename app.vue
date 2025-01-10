@@ -11,21 +11,34 @@
       </VAppBarTitle>
     </VAppBar>
 
-    <VNavigationDrawer v-model="isDrawerOpen">
-      <VList>
-        <VListItem
-          v-for="link in links"
-          :key="link.title"
-          :href="link.url"
-          target="_blank"
-          class="d-flex items-center"
-          color="burnt_sienna"
-        >
-          <template #prepend>
-            <VIcon :color="link['icon-color']">{{ link.icon }}</VIcon>
-          </template>
-          <VListItemTitle>{{ link.title }}</VListItemTitle>
-        </VListItem>
+    <VNavigationDrawer v-model="isDrawerOpen" class="drawer">
+      <VList class="flex-1">
+        <template v-for="(linkGroup, index) in links">
+          <VListItem
+            v-for="link in linkGroup"
+            :key="link.title"
+            :href="link.url"
+            target="_blank"
+            class="d-flex items-center"
+            color="burnt_sienna"
+          >
+            <template #prepend>
+              <div class="mr-8">
+                <template v-if="link.icon?.name">
+                  <VIcon :color="link.icon?.color" width="24" height="24">
+                    {{ link.icon?.name }}
+                  </VIcon>
+                </template>
+                <template v-else>
+                  <div class="text-2xl">{{ link.icon?.emoji }}</div>
+                </template>
+              </div>
+            </template>
+            <VListItemTitle>{{ link.title }}</VListItemTitle>
+          </VListItem>
+
+          <VDivider v-if="index !== links.length - 1" class="border-rose-950" />
+        </template>
       </VList>
 
       <template #append>
@@ -54,7 +67,13 @@
 </template>
 
 <script setup lang="ts">
-import links from '~/assets/links.json';
+import { links } from '~/assets/links';
 
 const isDrawerOpen = ref(false);
 </script>
+
+<style scoped>
+.drawer:deep(.v-navigation-drawer__content) {
+  @apply flex flex-1;
+}
+</style>
