@@ -31,26 +31,30 @@
       <template #append>
         <VListItem
           to="/about"
-          prepend-icon="mdi-information-outline"
+          prepend-icon="mdi-text-box-search"
           title="關於"
         />
       </template>
     </VNavigationDrawer>
 
     <VMain class="bg-burnt_sienna-200">
-      <VContainer>
-        <NuxtPage />
-      </VContainer>
-      <VFooter color="anti_flash_white">
-        <VIcon>mdi-information-outline</VIcon>
-      </VFooter>
+      <div class="flex flex-col h-full">
+        <VContainer class="flex-1">
+          <NuxtPage />
+        </VContainer>
+
+        <div>
+          <VFooter color="anti_flash_white">
+            <VIcon>mdi-information-outline</VIcon>
+          </VFooter>
+        </div>
+      </div>
     </VMain>
   </VApp>
 </template>
 
 <script setup lang="ts">
 import links from '~/assets/links.json';
-console.log(links);
 
 const isDrawerOpen = ref(false);
 </script>

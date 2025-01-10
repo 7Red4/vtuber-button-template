@@ -34,6 +34,7 @@
         v-for="group in filteredSounds"
         :key="group.group_name"
         :value="group.group_name"
+        :id="`group-btn-${group.group_name}`"
       >
         <VExpansionPanelTitle>
           <span class="text-2xl">
@@ -45,16 +46,24 @@
           <VBtn
             v-for="voice in group.voice_list"
             @click="playSound(voice.path, voice.description.zh)"
-            class="sound_btn !rounded-[28px]"
-            color="burnt_sienna"
+            class="sound_btn !rounded-[28px] overflow-hidden"
+            :color="
+              currentPlayingSound?.name === voice.description.zh
+                ? 'blue_green'
+                : 'burnt_sienna'
+            "
             variant="flat"
+            :id="`sound-btn-${voice.name}`"
           >
-            <span>{{ voice.description.zh }}</span>
-            <VSlideXTransition>
-              <VIcon v-if="currentPlayingSound?.name === voice.description.zh">
-                mdi-play
-              </VIcon>
-            </VSlideXTransition>
+            <div>
+              {{ voice.description.zh }}
+            </div>
+            <VProgressLinear
+              v-if="currentPlayingSound?.name === voice.description.zh"
+              :model-value="currentPlayingSound?.progress"
+              color="ucla_blue"
+              class="!absolute !bottom-0 !top-auto left-0 w-full"
+            />
           </VBtn>
         </VExpansionPanelText>
       </VExpansionPanel>
@@ -83,6 +92,13 @@
 
             <template v-slot:append>
               <VBtn
+                :icon="soundSettings.loop ? 'mdi-repeat' : 'mdi-repeat-off'"
+                variant="text"
+                @click="toggleSoundLoop"
+                color="blue_green"
+              />
+
+              <VBtn
                 :icon="
                   currentPlayingSound?.isPlaying ? 'mdi-pause' : 'mdi-play'
                 "
@@ -104,12 +120,39 @@
       </VSheet>
     </VBottomSheet>
 
+    <VFab location="bottom right" app icon="mdi-tune-vertical-variant">
+      <VIcon>mdi-tune-vertical-variant</VIcon>
+
+      <VMenu activator="parent" location="top">
+        <VBtn
+          :icon="soundSettings.loop ? 'mdi-repeat' : 'mdi-repeat-off'"
+          class="my-2"
+          @click="toggleSoundLoop"
+        />
+        <VBtn icon="mdi-shuffle" @click="playRandomSound" class="my-2" />
+      </VMenu>
+    </VFab>
+
+    <ClientOnly>
+      <VSonner
+        position="top-right"
+        timeout="-1"
+        :toast-options="{
+          style: { background: '#315b68', borderRadius: '8px' }
+        }"
+      />
+    </ClientOnly>
+
     <div class="h-32" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { VSonner, toast } from 'vuetify-sonner';
 import sounds from '~/assets/voices.json';
+import { useGoTo } from 'vuetify';
+
+const goTo = useGoTo();
 
 type T_SoundStructure = typeof sounds;
 
@@ -153,6 +196,27 @@ const soundSettings = ref<{
   stack?: boolean;
 }>({});
 
+const toggleSoundLoop = () => {
+  soundSettings.value.loop = !soundSettings.value.loop;
+};
+
+watch(
+  () => soundSettings.value,
+  (v) => {
+    if (currentPlayingSound.value) {
+      currentPlayingSound.value.settings = v;
+    }
+  },
+  { deep: true }
+);
+
+watch(
+  () => soundSettings.value.loop,
+  (v) => {
+    toast(v ? '開啟循環播放' : '關閉循環播放');
+  }
+);
+
 const currentPlayingSound = ref<{
   audio: HTMLAudioElement;
   settings: { loop?: boolean; volume?: number; stack?: boolean };
@@ -179,7 +243,11 @@ const setListenerForCurrentPlayingSound = () => {
 
   audio.addEventListener('ended', () => {
     if (currentPlayingSound.value) {
-      currentPlayingSound.value = null;
+      if (soundSettings.value.loop) {
+        currentPlayingSound.value.audio.play();
+      } else {
+        currentPlayingSound.value = null;
+      }
     }
   });
 
@@ -205,6 +273,23 @@ const playSound = (soundPath: string, soundName: string) => {
 
   setListenerForCurrentPlayingSound();
   currentPlayingSound.value?.audio?.play?.();
+};
+
+const playRandomSound = async () => {
+  search.value = '';
+  doSearch();
+  stopSound();
+  const randomSoundGroup =
+    sounds.groups[Math.floor(Math.random() * sounds.groups.length)];
+  const randomSound =
+    randomSoundGroup.voice_list[
+      Math.floor(Math.random() * randomSoundGroup.voice_list.length)
+    ];
+
+  await nextTick();
+  goTo(`#group-btn-${randomSoundGroup.group_name}`);
+
+  playSound(randomSound.path, randomSound.description.zh);
 };
 
 const toggleSound = () => {
@@ -235,6 +320,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .sound_btn {
+  @apply relative;
   margin-top: 4px;
   margin-left: 4px;
 
@@ -249,7 +335,8 @@ onBeforeUnmount(() => {
   text-align: left;
 }
 
-:deep(.v-expansion-panel) {
-  /* background-color: transparent !important; */
+:deep(.card-snackbar) {
+  background: transparent !important;
+  color: #fff !important;
 }
 </style>

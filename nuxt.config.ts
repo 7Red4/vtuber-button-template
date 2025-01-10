@@ -11,4 +11,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'vuetify-nuxt-module',
   ],
+  build: {
+    transpile: ['vuetify-sonner']
+  }
 })
