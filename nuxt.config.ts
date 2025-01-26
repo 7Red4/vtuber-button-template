@@ -30,7 +30,7 @@ export default defineNuxtConfig({
         { hid: 'og:image', property: 'og:image', content: site.social_image },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:site', content: site.twitter_user },
-        { name: "theme-color", content: site.color }
+        { name: "theme-color", content: site.theme_color }
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: "/icon.png" },
