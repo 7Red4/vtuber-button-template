@@ -10,5 +10,6 @@
   "editor.formatOnSave": true,
   "cSpell.words": [
     "timberwolf"
-  ]
+  ],
+  "nuxt.isNuxtApp": true
 }
