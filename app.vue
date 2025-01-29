@@ -1,6 +1,6 @@
 <template>
   <VApp>
-    <VAppBar color="burnt_sienna">
+    <VAppBar color="primary">
       <template #prepend>
         <VAppBarNavIcon @click="isDrawerOpen = !isDrawerOpen" />
       </template>
@@ -20,7 +20,7 @@
             :href="link.url"
             target="_blank"
             class="d-flex items-center"
-            color="burnt_sienna"
+            color="primary"
           >
             <template #prepend>
               <div class="mr-8">
@@ -50,14 +50,14 @@
       </template>
     </VNavigationDrawer>
 
-    <VMain class="bg-burnt_sienna-200">
+    <VMain class="bg-primary-200">
       <div class="flex flex-col h-full">
         <VContainer class="flex-1">
           <NuxtPage />
         </VContainer>
 
         <div>
-          <VFooter color="anti_flash_white">
+          <VFooter color="neutral">
             <VIcon>mdi-information-outline</VIcon>
           </VFooter>
         </div>

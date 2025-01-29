@@ -6,7 +6,7 @@
           v-model="search"
           placeholder="搜尋"
           variant="outlined"
-          color="burnt_sienna"
+          color="primary"
           append-icon="mdi-magnify"
           @click:append="doSearch"
           hide-details
@@ -20,7 +20,7 @@
       </VCardText>
     </VCard>
     <div class="h-4" />
-    <VProgressCircular v-if="isSearching" indeterminate color="blue_green" />
+    <VProgressCircular v-if="isSearching" indeterminate color="secondary" />
 
     <div
       v-if="filteredSounds.length === 0 && !isSearching && !!search"
@@ -28,6 +28,21 @@
     >
       什麼都沒找到🥲
     </div>
+
+    <VTabs v-if="!isSearching" class="mb-3" hide-slider>
+      <VTab
+        v-for="group in filteredSounds"
+        :key="group.group_name"
+        class="text-secondary-600"
+        @click="
+          goTo(`#group-btn-${group.group_name}`, {
+            offset: -100
+          })
+        "
+      >
+        {{ group.group_description.zh }}
+      </VTab>
+    </VTabs>
 
     <VExpansionPanels v-model="expansionPanelController" multiple>
       <VExpansionPanel
@@ -49,8 +64,8 @@
             class="sound_btn !rounded-[28px] overflow-hidden"
             :color="
               currentPlayingSound?.name === voice.description.zh
-                ? 'blue_green'
-                : 'burnt_sienna'
+                ? 'secondary'
+                : 'primary'
             "
             variant="flat"
             :id="`sound-btn-${voice.name}`"
@@ -61,7 +76,7 @@
             <VProgressLinear
               v-if="currentPlayingSound?.name === voice.description.zh"
               :model-value="currentPlayingSound?.progress"
-              color="ucla_blue"
+              color="secondary"
               class="!absolute !bottom-0 !top-auto left-0 w-full"
             />
           </VBtn>
@@ -81,7 +96,7 @@
       <VSheet>
         <VProgressLinear
           :model-value="currentPlayingSound?.progress"
-          color="blue_green"
+          color="secondary"
         />
 
         <VList>
@@ -95,7 +110,7 @@
                 :icon="soundSettings.loop ? 'mdi-repeat' : 'mdi-repeat-off'"
                 variant="text"
                 @click="toggleSoundLoop"
-                color="blue_green"
+                color="secondary"
               />
 
               <VBtn
@@ -104,14 +119,14 @@
                 "
                 variant="text"
                 @click="toggleSound"
-                color="blue_green"
+                color="secondary"
               />
 
               <VBtn
                 class="ms-0"
                 icon="mdi-close"
                 variant="text"
-                color="blue_green"
+                color="secondary"
                 @click="stopSound"
               />
             </template>
@@ -151,6 +166,7 @@
 import { VSonner, toast } from 'vuetify-sonner';
 import sounds from '~/assets/voices.json';
 import { useGoTo } from 'vuetify';
+import { VTabs } from 'vuetify/components';
 
 const goTo = useGoTo();
 
