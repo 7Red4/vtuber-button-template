@@ -57,8 +57,26 @@
         </VContainer>
 
         <div>
-          <VFooter color="neutral">
-            <VIcon>mdi-information-outline</VIcon>
+          <VFooter color="neutral" class="footer">
+            <VIcon>mdi-copyright</VIcon>
+            <div class="w-1" />
+            <div>
+              <div>
+                2025
+                <a href="https://konnokai.me/" target="_blank">孤之界</a>
+                &
+                <a href="https://twitter.com/7Red4" target="_blank">紅柿</a>
+                &
+                <a href="https://github.com/kujyonatsume" target="_blank">
+                  九条夏目
+                </a>
+              </div>
+              <div>
+                本站為愛好者作品，和玖玖巴沒有關聯，其餘資訊請查看
+                <NuxtLink to="/about">關於</NuxtLink>
+                頁面
+              </div>
+            </div>
           </VFooter>
         </div>
       </div>
@@ -75,5 +93,9 @@ const isDrawerOpen = ref(false);
 <style scoped>
 .drawer:deep(.v-navigation-drawer__content) {
   @apply flex flex-1;
+}
+
+.footer a {
+  @apply text-primary-500 underline;
 }
 </style>
