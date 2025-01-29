@@ -68,7 +68,7 @@
                 : 'primary'
             "
             variant="flat"
-            :id="`sound-btn-${voice.name}`"
+            :data-sound-name="voice.description.zh"
           >
             <div>
               {{ voice.description.zh }}
@@ -100,16 +100,30 @@
         />
 
         <VList>
-          <VListItem>
+          <VListItem
+            @click.stop="
+              goTo(`[data-sound-name='${currentPlayingSound?.name}']`, {
+                offset: -100
+              })
+            "
+          >
             <VListItemTitle class="!whitespace-normal">
               {{ currentPlayingSound?.name }}
             </VListItemTitle>
 
             <template v-slot:append>
               <VBtn
+                v-if="hasClipboard"
+                icon="mdi-share"
+                variant="text"
+                color="secondary"
+                @click.stop="doShare"
+              />
+
+              <VBtn
                 :icon="soundSettings.loop ? 'mdi-repeat' : 'mdi-repeat-off'"
                 variant="text"
-                @click="toggleSoundLoop"
+                @click.stop="toggleSoundLoop"
                 color="secondary"
               />
 
@@ -118,7 +132,7 @@
                   currentPlayingSound?.isPlaying ? 'mdi-pause' : 'mdi-play'
                 "
                 variant="text"
-                @click="toggleSound"
+                @click.stop="toggleSound"
                 color="secondary"
               />
 
@@ -127,7 +141,7 @@
                 icon="mdi-close"
                 variant="text"
                 color="secondary"
-                @click="stopSound"
+                @click.stop="stopSound"
               />
             </template>
           </VListItem>
@@ -167,6 +181,8 @@ import { VSonner, toast } from 'vuetify-sonner';
 import sounds from '~/assets/voices.json';
 import { useGoTo } from 'vuetify';
 import { VTabs } from 'vuetify/components';
+
+const route = useRoute();
 
 const goTo = useGoTo();
 
@@ -237,6 +253,7 @@ const currentPlayingSound = ref<{
   audio: HTMLAudioElement;
   settings: { loop?: boolean; volume?: number; stack?: boolean };
   name: string;
+  path: string;
   progress?: number;
   isPlaying?: boolean;
 } | null>(null);
@@ -284,7 +301,8 @@ const playSound = (soundPath: string, soundName: string) => {
   currentPlayingSound.value = {
     audio,
     settings: soundSettings.value,
-    name: soundName
+    name: soundName,
+    path: soundPath
   };
 
   setListenerForCurrentPlayingSound();
@@ -323,10 +341,35 @@ const stopSound = () => {
 
 const expansionPanelController = ref<string[]>([]);
 
+const doShare = () => {
+  const currentSound = currentPlayingSound.value;
+  if (!currentSound) return;
+
+  navigator.clipboard.writeText(
+    `${location.origin}?btn=${encodeURIComponent(
+      currentSound.path
+    )}&name=${encodeURIComponent(currentSound.name)}`
+  );
+  toast('已複製到剪貼簿');
+};
+
+const hasClipboard = ref(true);
+
 onMounted(() => {
   expansionPanelController.value = sounds.groups.map(
     (group) => group.group_name
   );
+
+  if (!navigator.clipboard) {
+    hasClipboard.value = false;
+  }
+
+  if (route.query?.btn && route.query?.name) {
+    playSound(
+      decodeURIComponent(route.query.btn as string),
+      decodeURIComponent(route.query.name as string)
+    );
+  }
 });
 
 onBeforeUnmount(() => {
