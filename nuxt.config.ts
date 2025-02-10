@@ -7,15 +7,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   modules: [
-    '@nuxtus/nuxt-localtunnel',
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
     'vuetify-nuxt-module',
   ],
-  localtunnel: {
-    enabled: true,
-    port: 3333,
-  },
   build: {
     transpile: ['vuetify-sonner']
   },
