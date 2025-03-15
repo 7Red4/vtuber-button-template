@@ -76,7 +76,6 @@
             <div>
               <div>
                 2025
-
                 <template v-for="(author, i) in site.footer.authors">
                   <a :href="author.link" target="_blank">{{ author.name }}</a>
                   <span v-if="i !== site.footer.authors.length - 1">&</span>

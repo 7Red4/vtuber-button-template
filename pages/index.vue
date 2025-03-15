@@ -46,6 +46,41 @@
 
     <VExpansionPanels v-model="expansionPanelController" multiple>
       <VExpansionPanel
+        v-if="newSounds.length"
+        key="new"
+        value="new"
+        id="group-btn-new"
+      >
+        <VExpansionPanelTitle>
+          <span class="text-2xl">最近更新</span>
+        </VExpansionPanelTitle>
+
+        <VExpansionPanelText>
+          <VBtn
+            v-for="voice in newSounds" :key="voice.name"
+            @click="playSound(voice.path, voice.description.zh)"
+            class="sound_btn !rounded-[28px] overflow-hidden"
+            :color="
+              currentPlayingSound?.name === voice.description.zh
+                ? 'secondary'
+                : 'primary'
+            "
+            variant="flat"
+            :data-sound-name="voice.description.zh"
+          >
+            <div>
+              {{ voice.description.zh }}
+            </div>
+            <VProgressLinear
+              v-if="currentPlayingSound?.name === voice.description.zh"
+              :model-value="currentPlayingSound?.progress"
+              color="secondary"
+              class="!absolute !bottom-0 !top-auto left-0 w-full"
+            />
+          </VBtn>
+        </VExpansionPanelText>
+      </VExpansionPanel>
+      <VExpansionPanel
         v-for="group in filteredSounds"
         :key="group.group_name"
         :value="group.group_name"
@@ -193,11 +228,9 @@
 <script setup lang="ts">
 import { VSonner, toast } from 'vuetify-sonner';
 import sounds from '~/assets/voices.json';
-import { useGoTo } from 'vuetify';
 import dayjs from 'dayjs';
 
 const route = useRoute();
-
 const goTo = useGoTo();
 
 const isIn7Days = (unixtimestamp: number) => {
@@ -211,7 +244,11 @@ const isPageLoading = ref(true);
 const search = ref('');
 
 const filteredSounds = ref(sounds.groups);
-
+const newSounds = computed(() =>
+  filteredSounds.value
+    .map((g) => g.voice_list.filter((s) => isIn7Days(s.updated_at)))
+    .flat()
+);
 const isSearching = ref(false);
 const doSearch = () => {
   if (!search.value) {

@@ -80,6 +80,27 @@ export const links: T_Link[][] = [
       },
       title: '租咪按鈕',
       url: 'https://yuzumi-button.konnokai.me/'
+    },
+    {
+      "icon": {
+        "emoji": "🐣"
+      },
+      "title": "小響按鈕",
+      "url": "https://hibiki-button.konnokai.me/"
+    },
+    {
+      "icon": {
+        "emoji": "⚖️" //⛓️
+      },
+      "title": "魯尼按鈕",
+      "url": "https://iruni-button.natsumoe.com/"
+    },
+    {
+      "icon": {
+        "emoji": "😈"
+      },
+      "title": "玥玥按鈕",
+      "url": "https://itsuki-button.natsumoe.com/"
     }
   ]
 ];
