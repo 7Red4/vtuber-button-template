@@ -57,7 +57,7 @@
 
         <VExpansionPanelText>
           <VBtn
-            v-for="voice in newSounds" :key="voice.name"
+            v-for="voice in newSounds"
             @click="playSound(voice.path, voice.description.zh)"
             class="sound_btn !rounded-[28px] overflow-hidden"
             :color="
@@ -228,11 +228,9 @@
 <script setup lang="ts">
 import { VSonner, toast } from 'vuetify-sonner';
 import sounds from '~/assets/voices.json';
-import { useGoTo } from 'vuetify';
 import dayjs from 'dayjs';
 
 const route = useRoute();
-
 const goTo = useGoTo();
 
 const isIn7Days = (unixtimestamp: number) => {
@@ -249,7 +247,7 @@ const filteredSounds = ref(sounds.groups);
 const newSounds = computed(() =>
   filteredSounds.value
     .map((g) => g.voice_list.filter((s) => isIn7Days(s.updated_at)))
-    .flat(1)
+    .flat()
 );
 const isSearching = ref(false);
 const doSearch = () => {
