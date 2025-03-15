@@ -52,9 +52,7 @@
         id="group-btn-new"
       >
         <VExpansionPanelTitle>
-          <span class="text-2xl">
-            最近更新
-          </span>
+          <span class="text-2xl">最近更新</span>
         </VExpansionPanelTitle>
 
         <VExpansionPanelText>
@@ -248,8 +246,11 @@ const isPageLoading = ref(true);
 const search = ref('');
 
 const filteredSounds = ref(sounds.groups);
-const now = Date.now()
-const newSounds = computed(() => filteredSounds.value.map(g => g.voice_list.filter(s => (now - s.updated_at * 1000) > 7 * 24 * 60 * 60 * 1000 )).flat())
+const newSounds = computed(() =>
+  filteredSounds.value.map((g) =>
+    g.voice_list.filter((s) => isIn7Days(s.updated_at)).flat()
+  )
+);
 const isSearching = ref(false);
 const doSearch = () => {
   if (!search.value) {
