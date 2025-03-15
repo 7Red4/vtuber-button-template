@@ -24,63 +24,62 @@ type T_Link = {
   url: string;
 };
 
-
 export const links: T_Link[][] = [
   [
     {
-      "icon": {
-        "color": "#A96FFF",
-        "name": "mdi-twitch",
+      icon: {
+        color: '#A96FFF',
+        name: 'mdi-twitch'
       },
-      "title": "Twitch",
-      "url": "https://www.twitch.tv/998rrr"
+      title: 'Twitch',
+      url: 'https://www.twitch.tv/998rrr'
     },
     {
-      "icon": {
-        "color": "#FF0032",
-        "name": "mdi-youtube",
+      icon: {
+        color: '#FF0032',
+        name: 'mdi-youtube'
       },
-      "title": "Youtube",
-      "url": "https://www.youtube.com/@998rrr"
+      title: 'Youtube',
+      url: 'https://www.youtube.com/@998rrr'
     },
     {
-      "icon": {
-        "color": "#1E9AF0",
-        "name": "mdi-twitter",
+      icon: {
+        color: '#1E9AF0',
+        name: 'mdi-twitter'
       },
-      "title": "Twitter",
-      "url": "https://twitter.com/998rrr_"
+      title: 'Twitter',
+      url: 'https://twitter.com/998rrr_'
     },
     {
-      "icon": {
-        "color": "#5965F2",
-        "name": "mdi-discord",
+      icon: {
+        color: '#5965F2',
+        name: 'mdi-discord'
       },
-      "title": "Discord",
-      "url": "https://discord.gg/R9eMxbN5Yq"
+      title: 'Discord',
+      url: 'https://discord.gg/R9eMxbN5Yq'
     }
   ],
   [
     {
-      "icon": {
-        "emoji": "🍃"
+      icon: {
+        emoji: '🍃'
       },
-      "title": "小澪按鈕",
-      "url": "https://rei-button.konnokai.me/"
+      title: '小澪按鈕',
+      url: 'https://rei-button.konnokai.me/'
     },
     {
-      "icon": {
-        "emoji": "💥"
+      icon: {
+        emoji: '💥'
       },
-      "title": "阿基按鈕",
-      "url": "https://kirali-button.konnokai.me/"
+      title: '阿基按鈕',
+      url: 'https://kirali-button.konnokai.me/'
     },
     {
-      "icon": {
-        "emoji": "🍊"
+      icon: {
+        emoji: '🍊'
       },
-      "title": "租咪按鈕",
-      "url": "https://yuzumi-button.konnokai.me/"
+      title: '租咪按鈕',
+      url: 'https://yuzumi-button.konnokai.me/'
     }
   ]
-]
+];

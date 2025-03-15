@@ -37,6 +37,9 @@
                     {{ link.icon?.name }}
                   </VIcon>
                 </template>
+                <template v-else-if="link.icon?.url">
+                  <VImg :src="link.icon?.url" width="24" height="24" />
+                </template>
                 <template v-else>
                   <TwemojiParse class="text-xl">
                     {{ link.icon?.emoji }}
