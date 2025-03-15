@@ -13,10 +13,12 @@
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@nuxtus/nuxt-localtunnel": "^1.0.1",
     "@vueuse/nuxt": "^11.1.0",
+    "dayjs": "^1.11.13",
     "nuxt": "^3.13.0",
+    "nuxt-twemoji": "^3.6.2",
     "vue": "latest",
     "vue-router": "latest",
     "vuetify-nuxt-module": "^0.18.3",
-    "vuetify-sonner": "^0.3.21"
+    "vuetify-sonner": "^0.3.20"
   }
 }

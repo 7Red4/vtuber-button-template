@@ -6,13 +6,21 @@
       </template>
       <VAppBarTitle>
         <div class="flex items-center">
-          <NuxtLink class="font-bold" to="/">玖玖巴音效版</NuxtLink>
+          <NuxtLink class="font-bold" to="/">【玖玖巴按鈕】</NuxtLink>
         </div>
       </VAppBarTitle>
     </VAppBar>
 
     <VNavigationDrawer v-model="isDrawerOpen" class="drawer">
       <VList class="flex-1">
+        <VListItem to="/">
+          <template #prepend>
+            <div class="mr-8">
+              <VIcon>mdi-home</VIcon>
+            </div>
+          </template>
+          <VListItemTitle>首頁</VListItemTitle>
+        </VListItem>
         <template v-for="(linkGroup, index) in links">
           <VListItem
             v-for="link in linkGroup"
@@ -29,8 +37,13 @@
                     {{ link.icon?.name }}
                   </VIcon>
                 </template>
+                <template v-else-if="link.icon?.url">
+                  <VImg :src="link.icon?.url" width="24" height="24" />
+                </template>
                 <template v-else>
-                  <div class="text-2xl">{{ link.icon?.emoji }}</div>
+                  <TwemojiParse class="text-xl">
+                    {{ link.icon?.emoji }}
+                  </TwemojiParse>
                 </template>
               </div>
             </template>
@@ -63,19 +76,13 @@
             <div>
               <div>
                 2025
-                <a href="https://konnokai.me/" target="_blank">孤之界</a>
-                &
-                <a href="https://twitter.com/7Red4" target="_blank">紅柿</a>
-                &
-                <a href="https://github.com/kujyonatsume" target="_blank">
-                  九条夏目
-                </a>
+
+                <template v-for="(author, i) in site.footer.authors">
+                  <a :href="author.link" target="_blank">{{ author.name }}</a>
+                  <span v-if="i !== site.footer.authors.length - 1">&</span>
+                </template>
               </div>
-              <div>
-                本站為愛好者作品，和玖玖巴沒有關聯，其餘資訊請查看
-                <NuxtLink to="/about">關於</NuxtLink>
-                頁面
-              </div>
+              <div v-html="parseContent(site.footer.content)" />
             </div>
           </VFooter>
         </div>
@@ -86,8 +93,24 @@
 
 <script setup lang="ts">
 import { links } from '~/assets/links';
+import site from './assets/locales/site.json';
 
 const isDrawerOpen = ref(false);
+
+const parseContent = (content: string) => {
+  const params = site.footer.content_params;
+  params.forEach((param, i) => {
+    if (param.link) {
+      content = content.replace(
+        `{${i}}`,
+        `<a href="${param.link}" target="${param.target}">${param.name}</a>`
+      );
+    } else {
+      content = content.replace(`{${i}}`, param.name);
+    }
+  });
+  return content;
+};
 </script>
 
 <style scoped>
@@ -95,7 +118,7 @@ const isDrawerOpen = ref(false);
   @apply flex flex-1;
 }
 
-.footer a {
+.footer :deep(a) {
   @apply text-primary-500 underline;
 }
 </style>

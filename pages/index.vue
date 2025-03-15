@@ -95,28 +95,35 @@
         </VExpansionPanelTitle>
 
         <VExpansionPanelText>
-          <VBtn
+          <VBadge
             v-for="voice in group.voice_list"
-            @click="playSound(voice.path, voice.description.zh)"
-            class="sound_btn !rounded-[28px] overflow-hidden"
-            :color="
-              currentPlayingSound?.name === voice.description.zh
-                ? 'secondary'
-                : 'primary'
-            "
-            variant="flat"
-            :data-sound-name="voice.description.zh"
+            :key="voice.name"
+            :model-value="isIn7Days(voice.updated_at)"
+            color="secondary-400"
+            content="新"
           >
-            <div>
-              {{ voice.description.zh }}
-            </div>
-            <VProgressLinear
-              v-if="currentPlayingSound?.name === voice.description.zh"
-              :model-value="currentPlayingSound?.progress"
-              color="secondary"
-              class="!absolute !bottom-0 !top-auto left-0 w-full"
-            />
-          </VBtn>
+            <VBtn
+              @click="playSound(voice.path, voice.description.zh)"
+              class="sound_btn !rounded-[28px] overflow-hidden"
+              :color="
+                currentPlayingSound?.name === voice.description.zh
+                  ? 'secondary'
+                  : 'primary'
+              "
+              variant="flat"
+              :data-sound-name="voice.description.zh"
+            >
+              <div>
+                {{ voice.description.zh }}
+              </div>
+              <VProgressLinear
+                v-if="currentPlayingSound?.name === voice.description.zh"
+                :model-value="currentPlayingSound?.progress"
+                color="secondary"
+                class="!absolute !bottom-0 !top-auto left-0 w-full"
+              />
+            </VBtn>
+          </VBadge>
         </VExpansionPanelText>
       </VExpansionPanel>
     </VExpansionPanels>
@@ -210,18 +217,33 @@
     </ClientOnly>
 
     <div class="h-32" />
+
+    <div
+      class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
+      v-if="isPageLoading"
+    >
+      <VProgressCircular indeterminate color="secondary" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { VSonner, toast } from 'vuetify-sonner';
 import sounds from '~/assets/voices.json';
+import { useGoTo } from 'vuetify';
+import dayjs from 'dayjs';
 
 const route = useRoute();
 
 const goTo = useGoTo();
 
+const isIn7Days = (unixtimestamp: number) => {
+  return dayjs().diff(dayjs.unix(unixtimestamp), 'day') < 7;
+};
+
 type T_SoundStructure = typeof sounds;
+
+const isPageLoading = ref(true);
 
 const search = ref('');
 
@@ -328,12 +350,30 @@ const setListenerForCurrentPlayingSound = () => {
   });
 };
 
-const playSound = (soundPath: string, soundName: string) => {
+const playSound = async (soundPath: string, soundName: string) => {
   if (currentPlayingSound.value) {
     stopSound();
   }
+  const assetPath = `/voices/${soundPath}`;
 
-  const audio = new Audio(`/voices/${soundPath}`);
+  let fetchPassed = false;
+  try {
+    const response = await fetch(assetPath, { method: 'HEAD' });
+    if (response.status === 200) {
+      fetchPassed = true;
+    }
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+
+  if (!fetchPassed) {
+    toast('找不到聲音檔案');
+    return;
+  }
+
+  const audio = new Audio(assetPath);
+
   currentPlayingSound.value = {
     audio,
     settings: soundSettings.value,
@@ -395,6 +435,9 @@ onMounted(() => {
   expansionPanelController.value = sounds.groups.map(
     (group) => group.group_name
   );
+  nextTick(() => {
+    isPageLoading.value = false;
+  });
 
   if (!navigator.clipboard) {
     hasClipboard.value = false;
