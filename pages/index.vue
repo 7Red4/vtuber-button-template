@@ -57,7 +57,7 @@
 
         <VExpansionPanelText>
           <VBtn
-            v-for="voice in newSounds"
+            v-for="voice in newSounds" :key="voice.name"
             @click="playSound(voice.path, voice.description.zh)"
             class="sound_btn !rounded-[28px] overflow-hidden"
             :color="

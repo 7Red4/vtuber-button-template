@@ -50,7 +50,7 @@
             <VListItemTitle>{{ link.title }}</VListItemTitle>
           </VListItem>
 
-          <VDivider v-if="index !== links.length - 1" :key="index" class="border-rose-950" />
+          <VDivider v-if="index !== links.length - 1" class="border-rose-950" />
         </template>
       </VList>
 
@@ -76,10 +76,10 @@
             <div>
               <div>
                 2025
-                <span v-for="(author, i) in site.footer.authors" :key="i">
+                <template v-for="(author, i) in site.footer.authors">
                   <a :href="author.link" target="_blank">{{ author.name }}</a>
                   <span v-if="i !== site.footer.authors.length - 1">&</span>
-                </span>
+                </template>
               </div>
               <div v-html="parseContent(site.footer.content)" />
             </div>
