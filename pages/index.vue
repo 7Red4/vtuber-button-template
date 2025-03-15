@@ -306,6 +306,12 @@ const playSound = (soundPath: string, soundName: string) => {
   }
 
   const audio = new Audio(`/voices/${soundPath}`);
+
+  if (!audio) {
+    toast('找不到聲音檔案');
+    return;
+  }
+
   currentPlayingSound.value = {
     audio,
     settings: soundSettings.value,
