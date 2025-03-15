@@ -57,7 +57,7 @@
 
         <VExpansionPanelText>
           <VBtn
-            v-for="voice in newSounds"
+            v-for="voice in newSounds" :key="voice.name"
             @click="playSound(voice.path, voice.description.zh)"
             class="sound_btn !rounded-[28px] overflow-hidden"
             :color="
@@ -247,9 +247,9 @@ const search = ref('');
 
 const filteredSounds = ref(sounds.groups);
 const newSounds = computed(() =>
-  filteredSounds.value.map((g) =>
-    g.voice_list.filter((s) => isIn7Days(s.updated_at)).flat()
-  )
+  filteredSounds.value
+    .map((g) => g.voice_list.filter((s) => isIn7Days(s.updated_at)))
+    .flat(1)
 );
 const isSearching = ref(false);
 const doSearch = () => {
