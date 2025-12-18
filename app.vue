@@ -1,5 +1,13 @@
 <template>
   <VApp>
+    <!--
+      VTuber 按鈕網站模板
+
+      Copyright (c) 2025
+      孤之界、紅柿、九条夏目
+
+      Licensed under the Apache License, Version 2.0
+    -->
     <VAppBar color="primary">
       <template #prepend>
         <VAppBarNavIcon @click="isDrawerOpen = !isDrawerOpen" />
@@ -22,14 +30,8 @@
           <VListItemTitle>首頁</VListItemTitle>
         </VListItem>
         <template v-for="(linkGroup, index) in links">
-          <VListItem
-            v-for="link in linkGroup"
-            :key="link.title"
-            :href="link.url"
-            target="_blank"
-            class="d-flex items-center"
-            color="primary"
-          >
+          <VListItem v-for="link in linkGroup" :key="link.title" :href="link.url" target="_blank"
+            class="d-flex items-center" color="primary">
             <template #prepend>
               <div class="mr-8">
                 <template v-if="link.icon?.name">
@@ -55,11 +57,7 @@
       </VList>
 
       <template #append>
-        <VListItem
-          to="/about"
-          prepend-icon="mdi-text-box-search"
-          title="關於"
-        />
+        <VListItem to="/about" prepend-icon="mdi-text-box-search" title="關於" />
       </template>
     </VNavigationDrawer>
 
